@@ -1,133 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ScamSentinel Gemini</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .frame-3-2 { width: 90vw; max-width: 900px; aspect-ratio: 3/2; background: #1e293b; border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow-y: auto; }
-    .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-    .red-flag { color: #f43f5e; font-weight: 700; }
-    .safe-box { background: #065f46/20; border: 1px dashed #10b981; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; }
-    textarea { width: 100%; padding: 1rem; border-radius: 0.5rem; background: #0f172a; color: white; border: 1px solid #374151; resize: vertical; }
-    button { width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: #6366f1; font-weight: 700; margin-top: 0.5rem; transition: 0.2s; }
-    button:hover { background: #4f46e5; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScamSentinel Gemini</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:'Plus Jakarta Sans',sans-serif;
+background:linear-gradient(135deg,#020617,#0f172a);
+color:white;
+min-height:100vh;
+overflow:auto;
+}
+
+.glass{
+background:rgba(30,41,59,.7);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,.1);
+}
+
+.timeline{
+overflow-y:auto;
+max-height:70vh;
+padding-right:8px;
+}
+
+.safe-box{
+background:rgba(16,185,129,.15);
+border:1px solid rgba(16,185,129,.4);
+}
+
+.red-flag{
+color:#fb7185;
+font-weight:700;
+}
+
+::-webkit-scrollbar{
+width:6px;
+}
+::-webkit-scrollbar-thumb{
+background:#6366f1;
+border-radius:8px;
+}
+
+</style>
 </head>
+
 <body>
-  <div class="frame-3-2">
-    <header class="text-center mb-6">
-      <h1 class="text-3xl font-extrabold text-indigo-400 mb-1">🛡️ ScamSentinel Gemini</h1>
-      <p class="text-slate-400 text-sm">Gemini 3 Powered Fraud Detection for the Modern Web</p>
-    </header>
 
-    <div class="glass p-4 rounded mb-6">
-      <textarea id="userInput" rows="4" placeholder="Paste suspicious text, email, or URL here..."></textarea>
-      <button id="checkBtn">Check for Scam</button>
-    </div>
+<!-- APP -->
+<div class="min-h-screen flex flex-col">
 
-    <div id="resultsTimeline" class="space-y-4"></div>
+<!-- HEADER -->
+<header class="flex justify-between items-center px-6 py-5 border-b border-slate-800">
+<h1 class="text-3xl font-extrabold text-indigo-400">🛡️ ScamSentinel Gemini</h1>
+<span class="text-slate-400 text-sm">AI Scam Detection Engine</span>
+</header>
 
-    <p class="text-xs text-slate-400 mt-4 text-center">Powered by Gemini 3 API</p>
-  </div>
+<!-- MAIN -->
+<main class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
 
-  <script>
-    const checkBtn = document.getElementById('checkBtn');
-    const userInput = document.getElementById('userInput');
-    const resultsTimeline = document.getElementById('resultsTimeline');
+<!-- INPUT -->
+<section class="glass rounded-xl p-6 flex flex-col">
 
-    checkBtn.addEventListener('click', async () => {
-      const text = userInput.value.trim();
-      if (!text) return alert("Please enter a message!");
+<h2 class="text-xl font-bold mb-4">Analyze Message</h2>
 
-      checkBtn.disabled = true;
-      checkBtn.innerText = "Analyzing...";
+<textarea id="userInput"
+class="flex-1 bg-slate-900/60 border border-slate-700 rounded-xl p-4 resize-none text-white"
+placeholder="Paste suspicious text, email, or link..."></textarea>
 
-      try {
-        const data = await simulateGeminiAPI(text);
-        displayResult(data, text);
-        userInput.value = '';
-      } catch (error) {
-        alert("Error connecting to Gemini 3. Please check API settings.");
-      } finally {
-        checkBtn.disabled = false;
-        checkBtn.innerText = "Check for Scam";
-      }
-    });
+<button id="checkBtn"
+onclick="analyzeScam()"
+class="mt-4 bg-indigo-600 hover:bg-indigo-500 py-3 rounded-xl font-bold text-lg">
+Check for Scam
+</button>
 
-    function displayResult(data, originalText) {
-      let highlightedText = originalText;
-      data.redFlags.forEach(flag => {
-        const reg = new RegExp(`(${flag})`, "gi");
-        highlightedText = highlightedText.replace(reg, '<span class="red-flag">$1</span>');
-      });
+</section>
 
-      const card = document.createElement('div');
-      card.className = "glass p-4 rounded animate__animated animate__fadeInDown border-l-4 " + 
-                       (data.riskLevel === "High" ? "border-red-500" : "border-yellow-500");
+<!-- RESULTS -->
+<section class="glass rounded-xl p-6 flex flex-col">
 
-      card.innerHTML = `
-        <div class="flex justify-between items-start mb-2">
-          <span class="px-2 py-1 rounded-full text-xs font-bold uppercase bg-slate-800 tracking-wider">
-            Risk Level: ${data.riskLevel}
-          </span>
-          <span class="text-slate-400 text-xs">${new Date().toLocaleTimeString()}</span>
-        </div>
+<h2 class="text-xl font-bold mb-4">Detection Timeline</h2>
 
-        <div class="mb-2">
-          <p class="text-sm italic text-slate-300 mb-1">Original Message:</p>
-          <p class="p-2 bg-black/20 rounded text-sm">${highlightedText}</p>
-        </div>
+<div id="resultsArea" class="timeline space-y-4"></div>
 
-        <h3 class="text-lg font-bold mb-1">${data.summary}</h3>
-        <p class="text-slate-300 mb-2">${data.explanation}</p>
+</section>
 
-        <div class="grid md:grid-cols-2 gap-4 mb-2">
-          <div>
-            <h4 class="text-red-400 font-bold text-sm uppercase">Red Flags</h4>
-            <ul class="list-disc list-inside text-sm text-slate-300">
-              ${data.redFlags.map(f => `<li>${f}</li>`).join('')}
-            </ul>
-          </div>
-          <div>
-            <h4 class="text-blue-400 font-bold text-sm uppercase">Technique</h4>
-            <p class="text-sm text-slate-300">${data.manipulationTechnique}</p>
-          </div>
-        </div>
+</main>
 
-        <div class="safe-box">
-          <h4 class="text-green-400 font-bold text-sm uppercase mb-1">Safer Version</h4>
-          <p class="text-sm">${data.saferVersion}</p>
-        </div>
+<!-- FOOTER -->
+<footer class="text-center py-3 text-xs text-slate-500 border-t border-slate-800">
+Powered by Gemini 3
+</footer>
 
-        <div class="border-t border-slate-700 pt-2 mt-2">
-          <p class="text-sm font-medium text-blue-300">💡 Tip: ${data.safeNextSteps}</p>
-          <p class="text-xs mt-1 text-slate-500">Follow-up: ${data.followUpQuestion}</p>
-        </div>
-      `;
-      resultsTimeline.insertBefore(card, resultsTimeline.firstChild);
-    }
+</div>
 
-    // Mock Gemini 3 API response
-    async function simulateGeminiAPI(input) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            riskLevel: "High",
-            summary: "Potential Phishing attempt impersonating a bank.",
-            explanation: "The message creates false urgency and asks for sensitive credentials via an unofficial link.",
-            redFlags: ["Urgent tone", "Grammar errors", "Suspicious URL"],
-            manipulationTechnique: "Social Engineering (Fear/Urgency)",
-            safeNextSteps: "Do not click links. Block the sender and report to your bank.",
-            saferVersion: "Log in directly through your bank's official app or website to verify status.",
-            followUpQuestion: "Did the message include a specific deadline or account number?"
-          });
-        }, 1200);
-      });
-    }
-  </script>
+<script>
+
+async function analyzeScam(){
+
+const input=document.getElementById("userInput").value.trim();
+if(!input){alert("Enter a message first.");return;}
+
+const btn=document.getElementById("checkBtn");
+btn.disabled=true;
+btn.innerText="Scanning...";
+
+try{
+const data=await mockGemini(input);
+displayResult(data,input);
+document.getElementById("userInput").value="";
+}
+catch{
+alert("Gemini error.");
+}
+
+btn.disabled=false;
+btn.innerText="Check for Scam";
+}
+
+function displayResult(data,text){
+
+const area=document.getElementById("resultsArea");
+
+let riskColor="text-emerald-400";
+if(data.riskLevel==="Medium") riskColor="text-yellow-400";
+if(data.riskLevel==="High") riskColor="text-red-500";
+
+const card=document.createElement("div");
+card.className="glass p-5 rounded-xl";
+
+card.innerHTML=`
+
+<div class="flex justify-between mb-2">
+<span class="${riskColor} font-bold">${emoji(data.riskLevel)} ${data.riskLevel} Risk</span>
+<span class="text-xs text-slate-400">${new Date().toLocaleTimeString()}</span>
+</div>
+
+<p class="italic text-slate-400 text-sm mb-2">Original Message</p>
+<p class="bg-black/40 p-3 rounded mb-3">${highlight(text,data.redFlags)}</p>
+
+<h3 class="text-lg font-bold mb-1">${data.summary}</h3>
+<p class="text-slate-300 mb-3">${data.explanation}</p>
+
+<p><span class="text-red-400 font-bold">Red Flags:</span> ${data.redFlags.join(", ")}</p>
+<p><span class="text-blue-400 font-bold">Technique:</span> ${data.technique}</p>
+
+<div class="safe-box p-3 rounded-lg mt-3">
+<p class="font-bold text-green-400">Safer Version</p>
+<p>${data.saferVersion}</p>
+</div>
+
+<p class="mt-3 text-indigo-300"><b>Next Steps:</b> ${data.nextSteps}</p>
+<p class="mt-2 text-slate-400 text-sm">Follow-up: ${data.followUp}</p>
+
+`;
+
+area.prepend(card);
+}
+
+function emoji(level){
+if(level==="High") return "🚨";
+if(level==="Medium") return "⚠️";
+return "✅";
+}
+
+function highlight(text,flags){
+let out=text;
+flags.forEach(f=>{
+const reg=new RegExp(`(${f})`,"gi");
+out=out.replace(reg,'<span class="red-flag">$1</span>');
+});
+return out;
+}
+
+/* MOCK AI */
+async function mockGemini(){
+return new Promise(res=>{
+setTimeout(()=>{
+res({
+riskLevel:"High",
+summary:"Fake delivery notice",
+explanation:"Creates urgency and requests clicking suspicious link.",
+redFlags:["urgent","verify","account","click"],
+technique:"Phishing",
+saferVersion:"Visit courier official website directly.",
+nextSteps:"Delete message and block sender.",
+followUp:"Want me to scan a link?"
+});
+},1200);
+});
+}
+
+</script>
+
 </body>
 </html>
