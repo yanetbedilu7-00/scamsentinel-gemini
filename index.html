@@ -3,178 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ScamSentinel Gemini | Fraud Detection</title>
+<title>ScamSentinel Gemini</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: white; margin:0; padding:0; }
-  .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-  .red-flag { color: #f43f5e; font-weight: 800; text-decoration: underline; }
-  .safe-box { background: #065f46/20; border: 1px dashed #10b981; padding:1rem; border-radius:0.5rem; margin:1rem 0; }
-  #resultsTimeline { max-height: 70vh; overflow-y: auto; padding-right:5px; }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #0f172a;
+    color: white;
+    min-height: 100vh;
+}
+.container {
+    max-width: 900px;
+    width: 100%;
+    margin: auto;
+    padding: 20px;
+}
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.glass {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    background: rgba(30,41,59,0.6);
+    color: white;
+    font-size: 1rem;
+    resize: vertical;
+}
+button {
+    margin-top: 10px;
+    padding: 12px;
+    background: #6366f1;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    width: 100%;
+}
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.timeline-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-left-width: 4px;
+    border-radius: 12px;
+    background: rgba(30,41,59,0.7);
+}
+.red-flag {
+    color: #f43f5e;
+    font-weight: bold;
+}
+.safe-box {
+    background: rgba(5,150,105,0.2);
+    border: 1px dashed #10b981;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+.lang-select {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: rgba(30,41,59,0.6);
+    color: white;
+}
 </style>
 </head>
-<body class="p-4 md:p-8 h-screen flex flex-col">
-
-<div class="max-w-4xl mx-auto flex-1 flex flex-col">
-
-<header class="text-center mb-6">
-  <h1 class="text-4xl font-extrabold tracking-tight mb-2 text-indigo-400">🛡️ ScamSentinel Gemini</h1>
-  <p class="text-slate-400">Gemini 3 Powered Fraud Detection for the Modern Web</p>
+<body>
+<div class="container">
+<header>
+    <h1 class="text-4xl font-extrabold text-indigo-400 mb-2">🛡️ ScamSentinel Gemini</h1>
+    <p class="text-slate-400 mb-2">Detect scams in messages safely and interactively</p>
+    <select id="langSelect" class="lang-select">
+        <option value="en" selected>English</option>
+        <option value="fr">Français</option>
+        <option value="am">አማርኛ</option>
+    </select>
 </header>
 
-<div class="glass p-6 rounded-2xl shadow-2xl mb-6">
-  <div class="mb-4 flex gap-2 items-center">
-    <label for="langSelect" class="text-slate-300 font-bold">Language:</label>
-    <select id="langSelect" class="bg-slate-900/50 border border-slate-700 rounded px-2 py-1 text-white">
-      <option value="en">English</option>
-      <option value="fr">Français</option>
-      <option value="am">አማርኛ</option>
-    </select>
-  </div>
-
-  <textarea id="scamInput" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" rows="5" placeholder="Paste the suspicious text, email, or URL here..."></textarea>
-
-  <button id="analyzeBtn" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all flex justify-center items-center gap-2">
-    Check for Scam
-  </button>
+<div class="glass">
+    <textarea id="userInput" rows="4" placeholder="Paste the suspicious message here..."></textarea>
+    <button id="checkBtn">Check for Scam</button>
 </div>
 
-<div id="resultsTimeline" class="space-y-6 flex-1"></div>
-
-<p style="font-size:14px;color:gray;text-align:center;" class="mt-4">
-Powered by Gemini 3 API
-</p>
-
+<div id="resultsTimeline"></div>
 </div>
 
 <script>
 // Multilingual translations
 const translations = {
-  en: {
-    inputPlaceholder: "Paste the suspicious text, email, or URL here...",
-    checkButton: "Check for Scam",
-    safeTitle: "🛡️ Safer Version",
-    tipLabel: "💡 Tip",
-    followUpLabel: "Follow-up"
-  },
-  fr: {
-    inputPlaceholder: "Collez le texte, l'email ou le lien suspect ici...",
-    checkButton: "Vérifier l'arnaque",
-    safeTitle: "🛡️ Version plus sûre",
-    tipLabel: "💡 Astuce",
-    followUpLabel: "Suivi"
-  },
-  am: {
-    inputPlaceholder: "እባክዎን አስጠንቀቁት ጽሑፍ፣ ኢሜል ወይም ዩአርኤል እዚህ ያስገቡ...",
-    checkButton: "ስለ ስኬም ይምረጡ",
-    safeTitle: "🛡️ የተሻለ እቅድ",
-    tipLabel: "💡 ጥቆማ",
-    followUpLabel: "ተከታታይ ጥያቄ"
-  }
+    en: { safeTitle: "🛡️ Safer Version" },
+    fr: { safeTitle: "🛡️ Version Sécurisée" },
+    am: { safeTitle: "🛡️ ደህና የተቀየረ መልእክት" }
 };
 
-const langSelect = document.getElementById('langSelect');
-const userInput = document.getElementById('scamInput');
-const checkBtn = document.getElementById('analyzeBtn');
+const userInput = document.getElementById('userInput');
+const checkBtn = document.getElementById('checkBtn');
 const resultsTimeline = document.getElementById('resultsTimeline');
+const langSelect = document.getElementById('langSelect');
 
-// Update language dynamically
-function updateLanguage() {
-  const lang = langSelect.value;
-  userInput.placeholder = translations[lang].inputPlaceholder;
-  checkBtn.innerText = translations[lang].checkButton;
+// Mock Gemini API call
+async function callGeminiAPI(input) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            let isScam = input.toLowerCase().includes("money") || input.toLowerCase().includes("urgent");
+            resolve({
+                riskLevel: isScam ? "High" : "Low",
+                summary: isScam ? "Potential scam detected" : "Message looks safe",
+                explanation: isScam ? "This message may attempt to trick you into sending money." : "No scam indicators detected.",
+                redFlags: isScam ? ["Request for money", "Urgent tone"] : [],
+                manipulationTechnique: isScam ? "Social Engineering" : "None",
+                safeNextSteps: isScam ? "Do not respond and block sender." : "No action needed.",
+                saferVersion: isScam ? input.replace(/money/gi,"[redacted]") : input,
+                followUpQuestion: isScam ? "Would you like to report this?" : "None"
+            });
+        }, 500);
+    });
 }
-updateLanguage();
-langSelect.addEventListener('change', updateLanguage);
 
-// Main analyze button
 checkBtn.addEventListener('click', async () => {
-  const text = userInput.value;
-  if (!text.trim()) return alert("Please paste a message first!");
-  
-  checkBtn.disabled = true;
-  checkBtn.innerHTML = `<span class="animate-spin text-xl">🌀</span> Scanning...`;
+    const text = userInput.value.trim();
+    if (!text) return alert("Please enter a message!");
+    checkBtn.disabled = true;
 
-  try {
     const data = await callGeminiAPI(text);
     displayResult(data, text);
     userInput.value = '';
-  } catch (error) {
-    alert("Error connecting to Gemini 3. Please check API settings.");
-  } finally {
     checkBtn.disabled = false;
-    checkBtn.innerText = translations[langSelect.value].checkButton;
-  }
+
+    // Scroll to the latest result
+    setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 100);
 });
 
-// Mock Gemini 3 API call
-async function callGeminiAPI(input) {
-  return new Promise(r => setTimeout(() => r({
-    riskLevel: Math.random() > 0.5 ? "High" : "Low",
-    summary: "Potential phishing attempt detected.",
-    explanation: "The message exhibits traits commonly used in scams.",
-    redFlags: ["Suspicious link", "Urgent tone"],
-    manipulationTechnique: "Social Engineering",
-    safeNextSteps: "Do not click links. Verify sender identity.",
-    saferVersion: "Contact official source directly instead of replying.",
-    followUpQuestion: "Do you want me to check the link against a blacklist?"
-  }), 1200));
-}
-
-// Display analysis
 function displayResult(data, originalText) {
-  let highlightedText = originalText;
-  data.redFlags.forEach(flag => {
-    const reg = new RegExp(`(${flag})`, "gi");
-    highlightedText = highlightedText.replace(reg, '<span class="red-flag">$1</span>');
-  });
+    let highlightedText = originalText;
+    data.redFlags.forEach(flag => {
+        const reg = new RegExp(`(${flag})`, "gi");
+        highlightedText = highlightedText.replace(reg, '<span class="red-flag">$1</span>');
+    });
 
-  const card = document.createElement('div');
-  card.className = "glass p-6 animate__animated animate__fadeInDown timeline-item border-l-4 " +
-                   (data.riskLevel.includes("High") ? "border-red-500" : "border-emerald-500");
-
-  card.innerHTML = `
-    <div class="flex justify-between items-start mb-4">
-      <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-slate-800 tracking-wider">
-        Risk Level: ${data.riskLevel}
-      </span>
-      <span class="text-slate-400 text-xs">${new Date().toLocaleTimeString()}</span>
-    </div>
-
-    <div class="mb-4">
-      <p class="text-sm italic text-slate-300 mb-2">Original Message:</p>
-      <p class="p-3 bg-black/30 rounded text-sm">${highlightedText}</p>
-    </div>
-
-    <h3 class="text-xl font-bold mb-2">${data.summary}</h3>
-    <p class="text-slate-300 mb-4">${data.explanation}</p>
-
-    <div class="grid md:grid-cols-2 gap-4 mb-4">
-      <div>
-        <h4 class="text-red-400 font-bold text-sm uppercase">Red Flags</h4>
-        <ul class="list-disc list-inside text-sm text-slate-300">
-          ${data.redFlags.map(f => `<li>${f}</li>`).join('')}
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-blue-400 font-bold text-sm uppercase">Technique</h4>
-        <p class="text-sm text-slate-300">${data.manipulationTechnique}</p>
-      </div>
-    </div>
-
-    <div class="safe-box p-4 rounded-lg mb-4">
-      <h4 class="text-green-400 font-bold text-sm uppercase mb-1">${translations[langSelect.value].safeTitle}</h4>
-      <p class="text-sm">${data.saferVersion}</p>
-    </div>
-
-    <div class="border-t border-slate-700 pt-4 mt-4">
-      <p class="text-sm font-medium text-blue-300">${translations[langSelect.value].tipLabel}: ${data.safeNextSteps}</p>
-      <p class="text-xs mt-2 text-slate-500">${translations[langSelect.value].followUpLabel}: ${data.followUpQuestion}</p>
-    </div>
-  `;
-
-  resultsTimeline.insertBefore(card, resultsTimeline.firstChild);
+    const riskColor = data.riskLevel === "High" ? "border-red-500" : data.riskLevel === "Medium" ? "border-yellow-500" : "border-green-500";
+    const card = document.createElement('div');
+    card.className = "timeline-item " + riskColor;
+    card.innerHTML = `
+        <div class="mb-2 text-sm text-slate-400">${new Date().toLocaleTimeString()}</div>
+        <div class="mb-2"><strong>Original Message:</strong><br>${highlightedText}</div>
+        <h3 class="text-xl font-bold mb-1">${data.summary} (${data.riskLevel})</h3>
+        <p class="mb-2 text-slate-300">${data.explanation}</p>
+        <div class="mb-2"><strong>Red Flags:</strong> <span class="red-flag">${data.redFlags.join(", ")}</span></div>
+        <div class="mb-2"><strong>Technique:</strong> ${data.manipulationTechnique}</div>
+        <div class="safe-box"><strong>${translations[langSelect.value].safeTitle}:</strong><br>${data.saferVersion}</div>
+        <div class="mt-2 text-sm text-blue-300"><strong>Next Steps:</strong> ${data.safeNextSteps}</div>
+        <div class="mt-1 text-xs text-slate-500"><strong>Follow-up:</strong> ${data.followUpQuestion}</div>
+    `;
+    resultsTimeline.insertBefore(card, resultsTimeline.firstChild);
 }
 </script>
 </body>
