@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>ScamSentinel Gemini | AI Cyber Sentinel</title>
-<!-- Google Fonts + Font Awesome 6 -->
+<title>ScamSentinel Gemini | AI-Powered Scam Detector</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -14,15 +13,11 @@
       extend: {
         fontFamily: { 'sans': ['Inter', 'system-ui', 'sans-serif'] },
         animation: {
-          'glow-pulse': 'glowPulse 2s ease-in-out infinite',
           'float': 'float 5s ease-in-out infinite',
-          'slide-up': 'slideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1)',
           'fade-in': 'fadeIn 0.6s ease-out',
         },
         keyframes: {
-          glowPulse: { '0%,100%': { textShadow: '0 0 5px #3b82f6, 0 0 10px #2563eb' }, '50%': { textShadow: '0 0 20px #60a5fa, 0 0 30px #1e40af' } },
-          float: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-12px)' } },
-          slideUp: { from: { opacity: '0', transform: 'translateY(30px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+          float: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-8px)' } },
           fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } }
         }
       }
@@ -37,7 +32,6 @@
     min-height: 100vh;
     color: #eef2ff;
   }
-  /* Custom dark glassmorphism */
   .dark-glass {
     background: rgba(10, 20, 35, 0.65);
     backdrop-filter: blur(12px);
@@ -86,16 +80,6 @@
     border-color: #60a5fa;
     color: white;
     transform: translateY(-2px);
-  }
-  .feature-glow {
-    background: linear-gradient(135deg, rgba(30,64,175,0.2), rgba(0,0,0,0.4));
-    border-left: 3px solid #3b82f6;
-    transition: 0.2s;
-  }
-  .feature-glow:hover {
-    border-left-width: 5px;
-    background: rgba(59,130,246,0.1);
-    transform: translateX(6px);
   }
   .input-dark {
     width: 100%;
@@ -151,71 +135,73 @@
   .floating-icon {
     animation: float 4s ease-in-out infinite;
   }
-  @keyframes subtlePulse {
-    0% { opacity: 0.6; transform: scale(1);}
-    100% { opacity: 1; transform: scale(1.02);}
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0f172a; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+  .feature-card {
+    transition: all 0.2s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: #3b82f6;
   }
 </style>
 </head>
 <body>
 
-<!-- =================== LANDING PAGE (BLACK/BLUE THEME + DESCRIPTIVE) =================== -->
 <div id="landingPage" class="page active-page">
   <div class="max-w-6xl mx-auto">
-    <!-- Hero Section with dual buttons -->
     <div class="dark-glass p-6 md:p-10 text-center relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl -z-0"></div>
-      <div class="absolute bottom-0 left-0 w-72 h-72 bg-indigo-600/20 rounded-full blur-3xl -z-0"></div>
+      <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-72 h-72 bg-indigo-600/20 rounded-full blur-3xl"></div>
       
       <div class="relative z-10">
         <div class="inline-flex items-center gap-2 bg-blue-500/10 px-4 py-2 rounded-full border border-blue-500/30 mb-6">
           <i class="fas fa-shield-hog text-blue-400 text-sm"></i>
-          <span class="text-xs font-mono tracking-wider text-blue-300">AI-POWERED CYBER DEFENSE v2.0</span>
+          <span class="text-xs font-mono tracking-wider text-blue-300">AI POWERED CYBER DEFENSE</span>
         </div>
         
         <h1 class="text-5xl md:text-7xl font-black mb-4 tracking-tight">
           <span class="gradient-text">ScamSentinel</span>
           <span class="text-white"> Gemini</span>
         </h1>
-        <div class="text-2xl md:text-3xl font-semibold text-blue-300 mb-6">⚡ 99.9% Scam Detection Accuracy (Mock)</div>
+        <div class="text-2xl md:text-3xl font-semibold text-blue-300 mb-6">99.9 Percent Scam Detection Accuracy</div>
         
-        <!-- STATS ROW -->
         <div class="flex flex-wrap justify-center gap-6 mb-8">
-          <div class="stat-badge flex items-center gap-2"><i class="fas fa-chart-line text-blue-400"></i> 10,000+ threats analyzed</div>
-          <div class="stat-badge flex items-center gap-2"><i class="fas fa-bolt text-yellow-400"></i> < 0.3s response time</div>
-          <div class="stat-badge flex items-center gap-2"><i class="fas fa-globe text-green-400"></i> Real-time risk scoring</div>
+          <div class="stat-badge flex items-center gap-2"><i class="fas fa-chart-line text-blue-400"></i> 10000 threats analyzed</div>
+          <div class="stat-badge flex items-center gap-2"><i class="fas fa-bolt text-yellow-400"></i> Sub 0.3s response time</div>
+          <div class="stat-badge flex items-center gap-2"><i class="fas fa-globe text-green-400"></i> Real time risk scoring</div>
         </div>
         
         <p class="text-gray-300 max-w-2xl mx-auto text-lg leading-relaxed">
-          <span class="font-bold text-white">ScamSentinel Gemini</span> is an advanced AI-driven fraud detection engine that dissects phishing attempts, scam messages, and social engineering attacks. 
-          Instantly identify red flags, receive risk analysis, and generate <span class="text-blue-300">"Green Flag" safe replies</span> — all within a futuristic, secure interface.
+          <span class="font-bold text-white">ScamSentinel Gemini</span> is an advanced AI driven fraud detection engine that dissects phishing attempts, scam messages, and social engineering attacks. 
+          Instantly identify red flags, receive risk analysis, and generate safe replies all within a secure interface.
         </p>
         
-        <!-- Detailed description box (dark descriptive) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-8 text-left">
           <div class="dark-card p-5 flex gap-3 items-start">
             <i class="fas fa-robot text-2xl text-blue-400 mt-1"></i>
-            <div><h3 class="font-bold text-white">🧠 AI Core Intelligence</h3><p class="text-sm text-gray-300">Context-aware analysis: detects urgency, fake links, impersonation, financial bait & manipulative language.</p></div>
+            <div><h3 class="font-bold text-white">AI Core Intelligence</h3><p class="text-sm text-gray-300">Context aware analysis detects urgency, fake links, impersonation, financial bait and manipulative language.</p></div>
           </div>
           <div class="dark-card p-5 flex gap-3 items-start">
             <i class="fas fa-flag-checkered text-2xl text-green-400 mt-1"></i>
-            <div><h3 class="font-bold text-white">✅ Green Flag Generator</h3><p class="text-sm text-gray-300">Transform risky drafts into safe, professional responses without exposing sensitive data.</p></div>
+            <div><h3 class="font-bold text-white">Green Flag Generator</h3><p class="text-sm text-gray-300">Transform risky drafts into safe professional responses without exposing sensitive data.</p></div>
           </div>
           <div class="dark-card p-5 flex gap-3 items-start">
             <i class="fas fa-chalkboard-user text-2xl text-purple-400 mt-1"></i>
-            <div><h3 class="font-bold text-white">📘 Live Security Tips</h3><p class="text-sm text-gray-300">Classified anti-scam playbook: identify, verify, avoid — updated with latest fraud trends.</p></div>
+            <div><h3 class="font-bold text-white">Live Security Tips</h3><p class="text-sm text-gray-300">Classified anti scam playbook to identify, verify and avoid fraud.</p></div>
           </div>
           <div class="dark-card p-5 flex gap-3 items-start">
             <i class="fas fa-microphone-alt text-2xl text-cyan-400 mt-1"></i>
-            <div><h3 class="font-bold text-white">🎙️ Multi‑format Input</h3><p class="text-sm text-gray-300">Upload screenshots (image) or voice notes — simulated OCR & speech-to-text pipeline.</p></div>
+            <div><h3 class="font-bold text-white">Multi Format Input</h3><p class="text-sm text-gray-300">Upload screenshots or voice notes with simulated processing pipeline.</p></div>
           </div>
         </div>
         
         <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <button id="goToSignIn" class="btn-dark-primary"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-          <button id="goToSignUp" class="btn-outline-cyber"><i class="fas fa-user-plus"></i> Sign Up (New Account)</button>
+          <button id="goToSignUp" class="btn-outline-cyber"><i class="fas fa-user-plus"></i> Sign Up</button>
         </div>
-        <p class="text-xs text-gray-400 mt-6">🔐 Secure demo environment | No real data stored | Mock AI engine</p>
+        <p class="text-xs text-gray-400 mt-6">Secure demo environment | No real data stored | Mock AI engine</p>
         <div class="mt-6 text-sm text-blue-200/70 flex justify-center gap-5 flex-wrap">
           <span><i class="fas fa-envelope"></i> yanetbedilu7@gmail.com</span>
           <span><i class="fas fa-phone-alt"></i> +251922478313</span>
@@ -225,36 +211,34 @@
   </div>
 </div>
 
-<!-- =================== SIGN IN / SIGN UP MODAL-LIKE PAGE (Unified auth) =================== -->
 <div id="signInPage" class="page">
   <div class="dark-glass max-w-md mx-auto p-8 text-center">
     <i class="fas fa-user-astronaut text-5xl text-blue-400 mb-4 floating-icon"></i>
-    <h2 class="text-3xl font-bold text-white mb-2">Welcome back</h2>
-    <p class="text-gray-300 mb-6">Sign in to your ScamSentinel dashboard</p>
+    <h2 class="text-3xl font-bold text-white mb-2">Sign In</h2>
+    <p class="text-gray-300 mb-6">Access your ScamSentinel dashboard</p>
     <div class="space-y-4">
       <input type="email" id="signinEmail" placeholder="Email address" class="input-dark">
       <input type="password" id="signinPassword" placeholder="Password" class="input-dark">
       <button id="signInConfirmBtn" class="btn-dark-primary w-full justify-center"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</button>
     </div>
     <div class="mt-5 text-sm text-gray-400">
-      Don't have an account? <button id="switchToSignUpBtn" class="text-blue-400 hover:underline font-semibold">Create account</button>
+      No account? <button id="switchToSignUpBtn" class="text-blue-400 hover:underline font-semibold">Create account</button>
     </div>
-    <p class="text-xs text-gray-500 mt-6">Demo: any credentials work | instant access</p>
+    <p class="text-xs text-gray-500 mt-6">Demo any credentials work for instant access</p>
   </div>
 </div>
 
-<!-- =================== SIGN UP PAGE =================== -->
 <div id="signUpPage" class="page">
   <div class="dark-glass max-w-md mx-auto p-8 text-center">
     <i class="fas fa-user-shield text-5xl text-indigo-400 mb-4"></i>
-    <h2 class="text-3xl font-bold text-white mb-2">Join Sentinel</h2>
-    <p class="text-gray-300 mb-6">Create free account & fight scams instantly</p>
+    <h2 class="text-3xl font-bold text-white mb-2">Create Account</h2>
+    <p class="text-gray-300 mb-6">Join the scam protection network</p>
     <div class="space-y-4">
       <input type="text" id="signupName" placeholder="Full name" class="input-dark">
       <input type="email" id="signupEmail" placeholder="Email address" class="input-dark">
       <input type="password" id="signupPassword" placeholder="Create password" class="input-dark">
       <input type="password" id="signupConfirm" placeholder="Confirm password" class="input-dark">
-      <button id="signUpConfirmBtn" class="btn-dark-primary w-full justify-center"><i class="fas fa-user-check"></i> Sign Up & Protect</button>
+      <button id="signUpConfirmBtn" class="btn-dark-primary w-full justify-center"><i class="fas fa-user-check"></i> Sign Up</button>
     </div>
     <div class="mt-5 text-sm text-gray-400">
       Already have an account? <button id="switchToSignInBtn" class="text-blue-400 hover:underline font-semibold">Sign In</button>
@@ -262,38 +246,35 @@
   </div>
 </div>
 
-<!-- =================== MAIN DASHBOARD (after auth) =================== -->
 <div id="mainPage" class="page">
   <div class="flex flex-wrap justify-between items-center gap-3 mb-8">
     <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-blue-300 to-indigo-400 bg-clip-text text-transparent">
       <i class="fas fa-shield-virus text-blue-400"></i> ScamSentinel Hub
     </h1>
-    <div class="flex gap-2 text-sm bg-black/30 px-4 py-2 rounded-full"><i class="fas fa-microchip text-blue-400"></i> AI Mock Engine <span class="text-green-300">● Active</span></div>
+    <div class="flex gap-2 text-sm bg-black/30 px-4 py-2 rounded-full"><i class="fas fa-microchip text-blue-400"></i> AI Mock Engine <span class="text-green-300">Active</span></div>
   </div>
 
-  <!-- Feature Cards (Interactive) -->
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
-    <div class="dark-card p-5 cursor-pointer transition hover:scale-[1.02] hover:border-blue-500" onclick="toggleSection('checkSection')">
+    <div class="dark-card p-5 cursor-pointer feature-card" onclick="toggleSection('checkSection')">
       <i class="fas fa-search fa-2x text-blue-400 mb-2"></i>
-      <h3 class="font-bold text-xl">🔎 Scam Analyzer</h3>
-      <p class="text-xs text-gray-300">Detect phishing, urgency, keywords & links</p>
+      <h3 class="font-bold text-xl">Scam Analyzer</h3>
+      <p class="text-xs text-gray-300">Detect phishing urgency keywords and links</p>
     </div>
-    <div class="dark-card p-5 cursor-pointer transition hover:scale-[1.02] hover:border-green-500" onclick="toggleSection('generateSection')">
+    <div class="dark-card p-5 cursor-pointer feature-card" onclick="toggleSection('generateSection')">
       <i class="fas fa-leaf fa-2x text-green-400 mb-2"></i>
-      <h3 class="font-bold text-xl">🍃 Green Flag Gen</h3>
-      <p class="text-xs text-gray-300">Rewrite risky messages → safe reply</p>
+      <h3 class="font-bold text-xl">Green Flag Generator</h3>
+      <p class="text-xs text-gray-300">Rewrite risky messages into safe replies</p>
     </div>
-    <div class="dark-card p-5 cursor-pointer transition hover:scale-[1.02] hover:border-yellow-500" onclick="toggleSection('tipsSection')">
+    <div class="dark-card p-5 cursor-pointer feature-card" onclick="toggleSection('tipsSection')">
       <i class="fas fa-lightbulb fa-2x text-yellow-400 mb-2"></i>
-      <h3 class="font-bold text-xl">📘 Cyber Tips</h3>
-      <p class="text-xs text-gray-300">Classified protection playbook</p>
+      <h3 class="font-bold text-xl">Security Tips</h3>
+      <p class="text-xs text-gray-300">Protection playbook and best practices</p>
     </div>
   </div>
 
-  <!-- CHECK SECTION -->
   <div id="checkSection" class="dark-card p-5 mb-6" style="display: none;">
-    <div class="flex items-center gap-2 border-b border-blue-800 pb-2 mb-4"><i class="fas fa-exclamation-triangle text-red-400"></i><h2 class="text-xl font-bold">⚠️ Suspicious Message Scan</h2></div>
-    <textarea id="userInput" rows="4" class="input-dark w-full" placeholder="Paste suspicious email, SMS, or social DM... Example: 'URGENT: Bank account suspended, verify now: http://fake-bank.com'"></textarea>
+    <div class="flex items-center gap-2 border-b border-blue-800 pb-2 mb-4"><i class="fas fa-exclamation-triangle text-red-400"></i><h2 class="text-xl font-bold">Suspicious Message Scan</h2></div>
+    <textarea id="userInput" rows="4" class="input-dark w-full" placeholder="Paste suspicious email SMS or social media message. Example: URGENT Your bank account has been suspended verify now http fake link com"></textarea>
     <div class="flex flex-wrap justify-between mt-3 gap-2">
       <div class="flex gap-2">
         <label class="bg-gray-800/70 px-4 py-2 rounded-full text-sm cursor-pointer hover:bg-gray-700"><i class="fas fa-camera"></i> Image <input type="file" id="imgUploadMain" class="hidden" accept="image/*"></label>
@@ -305,24 +286,22 @@
     <div id="mediaPreviewMain" class="text-xs text-gray-400 mt-2"></div>
   </div>
 
-  <!-- GENERATE GREEN FLAG -->
   <div id="generateSection" class="dark-card p-5 mb-6" style="display: none;">
-    <div class="flex items-center gap-2 border-b border-green-800 pb-2 mb-4"><i class="fas fa-seedling text-green-400"></i><h2 class="text-xl font-bold">✨ Safe Message Architect</h2></div>
-    <textarea id="greenInputMain" rows="3" class="input-dark w-full" placeholder="Describe or paste risky draft: 'Send me your credit card details for verification'"></textarea>
-    <button id="generateGreenBtn" class="btn-dark-primary mt-3 w-full sm:w-auto"><i class="fas fa-magic"></i> Generate Green Flag Reply</button>
+    <div class="flex items-center gap-2 border-b border-green-800 pb-2 mb-4"><i class="fas fa-seedling text-green-400"></i><h2 class="text-xl font-bold">Safe Message Generator</h2></div>
+    <textarea id="greenInputMain" rows="3" class="input-dark w-full" placeholder="Describe or paste risky draft. Example: Send me your credit card details for verification"></textarea>
+    <button id="generateGreenBtn" class="btn-dark-primary mt-3 w-full sm:w-auto"><i class="fas fa-magic"></i> Generate Safe Reply</button>
     <div id="greenOutput" class="mt-4"></div>
   </div>
 
-  <!-- TIPS SECTION -->
   <div id="tipsSection" class="dark-card p-5" style="display: none;">
-    <div class="flex items-center gap-2 border-b border-yellow-700 pb-2 mb-4"><i class="fas fa-shield-hog text-yellow-400"></i><h2 class="text-xl font-bold">Sentinel Security Arsenal</h2></div>
+    <div class="flex items-center gap-2 border-b border-yellow-700 pb-2 mb-4"><i class="fas fa-shield-hog text-yellow-400"></i><h2 class="text-xl font-bold">Security Playbook</h2></div>
     <div id="tipsDynamic" class="max-h-96 overflow-y-auto pr-2 space-y-4"></div>
   </div>
 </div>
 
 <footer>
   <div class="flex justify-center gap-5 flex-wrap text-sm">
-    <span>© 2025 ScamSentinel Gemini — AI Fraud Shield</span>
+    <span>Copyright 2025 ScamSentinel Gemini AI Fraud Shield</span>
     <span><i class="fas fa-envelope"></i> yanetbedilu7@gmail.com</span>
     <span><i class="fas fa-phone-alt"></i> +251922478313</span>
   </div>
@@ -330,7 +309,6 @@
 </footer>
 
 <script>
-  // ---------- PAGE SWITCH LOGIC (SignIn / SignUp / Landing) ----------
   const landingPage = document.getElementById('landingPage');
   const signInPage = document.getElementById('signInPage');
   const signUpPage = document.getElementById('signUpPage');
@@ -341,17 +319,15 @@
   document.getElementById('switchToSignUpBtn').onclick = () => { signInPage.classList.remove('active-page'); signUpPage.classList.add('active-page'); };
   document.getElementById('switchToSignInBtn').onclick = () => { signUpPage.classList.remove('active-page'); signInPage.classList.add('active-page'); };
   
-  // Sign In logic (any credentials)
   document.getElementById('signInConfirmBtn').onclick = () => {
     const email = document.getElementById('signinEmail').value.trim();
     const pwd = document.getElementById('signinPassword').value.trim();
     if(!email || !pwd) { alert("Please enter email and password to sign in."); return; }
     signInPage.classList.remove('active-page');
     mainPage.classList.add('active-page');
-    showToast(`🔐 Welcome back, ${email.split('@')[0]} — Sentinel mode active`);
+    showToast("Welcome back " + email.split('@')[0] + " Sentinel mode active");
   };
   
-  // Sign Up logic with validation
   document.getElementById('signUpConfirmBtn').onclick = () => {
     const name = document.getElementById('signupName').value.trim();
     const email = document.getElementById('signupEmail').value.trim();
@@ -362,7 +338,7 @@
     if(pass.length < 4) { alert("Password must be at least 4 characters"); return; }
     signUpPage.classList.remove('active-page');
     mainPage.classList.add('active-page');
-    showToast(`✅ Account created! ${name}, start scanning messages now.`);
+    showToast("Account created " + name + " start scanning messages now");
   };
   
   function showToast(msg) {
@@ -386,20 +362,45 @@
   }
   
   window.toggleSection = (id) => {
-    ['checkSection','generateSection','tipsSection'].forEach(sec => {
+    const sections = ['checkSection', 'generateSection', 'tipsSection'];
+    sections.forEach(sec => {
       const el = document.getElementById(sec);
       if(el) el.style.display = (sec === id ? 'block' : 'none');
     });
   };
-  // initially hide all sections
+  
   document.getElementById('checkSection').style.display = 'none';
   document.getElementById('generateSection').style.display = 'none';
   document.getElementById('tipsSection').style.display = 'none';
   
-  // ---------- ADVANCED MOCK SCANNER (HIGH RISK LOGIC) ----------
-  const riskyLexicon = ['money', 'password', 'bank', 'urgent', 'verify account', 'click here', 'bitcoin', 'wire transfer', 'ssn', 'social security', 'lottery', 'prize', 'phishing', 'login immediately', 'payment required', 'suspend', 'deactivate'];
+  const riskyLexicon = ['money', 'password', 'bank', 'urgent', 'verify account', 'click here', 'bitcoin', 'wire transfer', 'ssn', 'social security', 'lottery', 'prize', 'phishing', 'login immediately', 'payment required', 'suspend', 'deactivate', 'verify now', 'account locked'];
+  
   function scanMessageRisk(text) {
     let lower = text.toLowerCase();
     let found = [];
     riskyLexicon.forEach(kw => { if(lower.includes(kw)) found.push(kw); });
-    if(/(https?:\/\/[^\s]+)/i.test(text) && !found.includes('link
+    if(/(https?:\/\/[^\s]+)/i.test(text) && !found.includes('suspicious link')) found.push('suspicious link');
+    found = [...new Set(found)];
+    let risk = "Low";
+    let confidence = 92;
+    let explanation = "No major scam indicators detected. Communication appears safe.";
+    let safer = text;
+    let nextSteps = "Stay cautious but no immediate threat detected.";
+    let followUp = "Verify sender if unexpected.";
+    if(found.length >= 2) { 
+      risk = "High"; 
+      confidence = 98; 
+      explanation = "Multiple scam flags detected including urgency financial keywords and suspicious links. High probability of phishing."; 
+      safer = "SAFE ALTERNATIVE: I cannot share personal or financial details. Please contact me through verified official channels only."; 
+      nextSteps = "BLOCK sender. REPORT as spam. NEVER click links or reply. Contact institution directly using official website."; 
+      followUp = "Did you expect this message Have you verified the sender identity"; 
+    }
+    else if(found.length === 1) { 
+      risk = "Medium"; 
+      confidence = 87; 
+      explanation = "Red flag detected " + found[0] + " potential social engineering attempt."; 
+      safer = "CAUTION I will verify this through official support channels before proceeding with any action."; 
+      nextSteps = "Double check sender email or phone. Hover over links to see real URL. Do not share sensitive information."; 
+      followUp = "Does the sender contact information match official records"; 
+    }
+    return { risk, confidence, summary: risk === 'High' ? 'LIKELY SCAM DETECTED' : (risk === 'Medium' ? 'SUSPICIOUS ELEMENTS' : 'SAFE MESSAGE'), explanati
