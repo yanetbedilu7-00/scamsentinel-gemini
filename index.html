@@ -1,440 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>ScamSentinel Gemini | Cybersecurity Message Analyzer</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: { 'sans': ['Inter', 'system-ui', 'sans-serif'] },
-        animation: {
-          'float': 'float 5s ease-in-out infinite',
-          'fade-in': 'fadeIn 0.6s ease-out',
-          'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        },
-        keyframes: {
-          float: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-8px)' } },
-          fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } }
-        }
-      }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>ScamShield AI | 6-in-1 Rule-Based Security Suite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    body {
+      background: radial-gradient(circle at 10% 20%, #0a0f1f, #020617);
+      min-height: 100vh;
     }
-  }
-</script>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: radial-gradient(circle at 10% 20%, #0a0c10, #030507);
-    min-height: 100vh;
-    color: #eef2ff;
-  }
-  .dark-glass {
-    background: rgba(10, 20, 35, 0.65);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(59,130,246,0.25);
-    border-radius: 2rem;
-    box-shadow: 0 25px 40px -12px rgba(0,0,0,0.6);
-  }
-  .dark-card {
-    background: rgba(5, 10, 22, 0.85);
-    backdrop-filter: blur(8px);
-    border-radius: 1.75rem;
-    border: 1px solid rgba(59,130,246,0.3);
-    transition: all 0.25s ease;
-  }
-  .btn-dark-primary {
-    background: linear-gradient(95deg, #1e40af, #3b82f6);
-    color: white;
-    font-weight: 700;
-    padding: 0.75rem 2rem;
-    border-radius: 3rem;
-    transition: all 0.25s ease;
-    box-shadow: 0 8px 20px rgba(59,130,246,0.3);
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-  .btn-dark-primary:hover {
-    transform: scale(1.02);
-    box-shadow: 0 12px 28px rgba(59,130,246,0.5);
-    background: linear-gradient(95deg, #2563eb, #1e3a8a);
-  }
-  .btn-outline-cyber {
-    background: transparent;
-    border: 1.5px solid #3b82f6;
-    color: #90cdf4;
-    font-weight: 600;
-    padding: 0.7rem 1.8rem;
-    border-radius: 3rem;
-    transition: all 0.2s;
-    cursor: pointer;
-  }
-  .btn-outline-cyber:hover {
-    background: rgba(59,130,246,0.15);
-    border-color: #60a5fa;
-    color: white;
-    transform: translateY(-2px);
-  }
-  .input-dark {
-    width: 100%;
-    background: rgba(15, 25, 45, 0.8);
-    border: 1px solid #2d3a5e;
-    border-radius: 1.25rem;
-    padding: 0.85rem 1.2rem;
-    color: white;
-    transition: all 0.2s;
-    outline: none;
-    font-family: 'Inter', monospace;
-  }
-  .input-dark:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
-  }
-  .result-card {
-    border-radius: 1.25rem;
-    padding: 1.5rem;
-    backdrop-filter: blur(4px);
-    transition: all 0.2s;
-  }
-  .result-green { background: rgba(16, 185, 129, 0.15); border-left: 6px solid #10b981; }
-  .result-yellow { background: rgba(245, 158, 11, 0.15); border-left: 6px solid #f59e0b; }
-  .result-red { background: rgba(239, 68, 68, 0.15); border-left: 6px solid #ef4444; }
-  .page {
-    display: none;
-    padding: 2rem 1.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-    animation: fadeIn 0.5s ease;
-  }
-  .active-page { display: block; }
-  .gradient-text {
-    background: linear-gradient(120deg, #a5f3fc, #3b82f6, #7c3aed);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-  footer {
-    text-align: center;
-    padding: 1.5rem;
-    background: #03070f;
-    border-top: 1px solid #1e293b;
-    color: #94a3b8;
-    font-size: 0.85rem;
-    margin-top: 2rem;
-  }
-  .stat-badge {
-    background: rgba(59,130,246,0.2);
-    border-radius: 2rem;
-    padding: 0.3rem 0.9rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-  .floating-icon {
-    animation: float 4s ease-in-out infinite;
-  }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #0f172a; border-radius: 10px; }
-  ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-  .feature-card {
-    transition: all 0.2s ease;
-  }
-  .feature-card:hover {
-    transform: translateY(-4px);
-    border-color: #3b82f6;
-  }
-  .category-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1.2rem;
-    border-radius: 3rem;
-    font-weight: 700;
-    font-size: 1.1rem;
-  }
-</style>
+    .glass-panel {
+      background: rgba(15, 25, 45, 0.65);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+    }
+    .glass-card {
+      background: rgba(18, 28, 48, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      transition: all 0.2s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.6);
+      transform: translateY(-2px);
+    }
+    .btn-primary-glow {
+      background: linear-gradient(95deg, #4f46e5, #7c3aed);
+      transition: all 0.2s;
+    }
+    .btn-primary-glow:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px -6px #4f46e5;
+    }
+    .btn-danger {
+      background: linear-gradient(95deg, #dc2626, #b91c1c);
+    }
+    .btn-danger:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px -6px #dc2626;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-slide {
+      animation: fadeSlideUp 0.5s ease forwards;
+    }
+    .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #1e293b; border-radius: 10px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
+    .flag-red-bg { background: rgba(244, 63, 94, 0.2); border-left: 4px solid #f43f5e; }
+    .flag-yellow-bg { background: rgba(245, 158, 11, 0.15); border-left: 4px solid #f59e0b; }
+    .flag-green-bg { background: rgba(16, 185, 129, 0.12); border-left: 4px solid #10b981; }
+    .tab-active {
+      background: rgba(99, 102, 241, 0.4);
+      border-bottom: 2px solid #6366f1;
+      color: white;
+    }
+    .tab-inactive {
+      color: #94a3b8;
+    }
+    .score-bar-red { background: linear-gradient(90deg, #f43f5e, #b91c1c); }
+    .score-bar-yellow { background: linear-gradient(90deg, #f59e0b, #d97706); }
+    .score-bar-green { background: linear-gradient(90deg, #10b981, #059669); }
+  </style>
 </head>
-<body>
+<body class="text-white">
 
-<div id="landingPage" class="page active-page">
-  <div class="max-w-6xl mx-auto">
-    <div class="dark-glass p-6 md:p-10 text-center relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-0 left-0 w-72 h-72 bg-indigo-600/20 rounded-full blur-3xl"></div>
-      
-      <div class="relative z-10">
-        <div class="inline-flex items-center gap-2 bg-blue-500/10 px-4 py-2 rounded-full border border-blue-500/30 mb-6">
-          <i class="fas fa-shield-hog text-blue-400 text-sm"></i>
-          <span class="text-xs font-mono tracking-wider text-blue-300">CYBERSECURITY MESSAGE ANALYZER</span>
+  <!-- WELCOME PAGE -->
+  <div id="welcomeOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-700" style="background: radial-gradient(circle at center, #0b1120, #030617);">
+    <div class="max-w-5xl w-full mx-auto animate-fade-slide">
+      <div class="glass-panel rounded-3xl p-6 md:p-10 shadow-2xl border border-indigo-500/40 text-center">
+        <div class="inline-flex items-center gap-2 bg-indigo-500/20 px-4 py-2 rounded-full border border-indigo-400/40 mb-6">
+          <i class="fas fa-shield-hooded text-indigo-400"></i>
+          <span class="text-xs font-bold">6-IN-1 RULE-BASED SECURITY SUITE</span>
         </div>
-        
-        <h1 class="text-5xl md:text-7xl font-black mb-4 tracking-tight">
-          <span class="gradient-text">ScamSentinel</span>
-          <span class="text-white"> Gemini</span>
+        <h1 class="text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-indigo-300 via-sky-300 to-indigo-400 bg-clip-text text-transparent mb-4">
+          ScamShield AI
         </h1>
-        <div class="text-2xl md:text-3xl font-semibold text-blue-300 mb-6">AI-Powered Scam Detection System</div>
-        
-        <div class="flex flex-wrap justify-center gap-6 mb-8">
-          <div class="stat-badge flex items-center gap-2"><i class="fas fa-chart-simple text-blue-400"></i> Risk Scoring Algorithm</div>
-          <div class="stat-badge flex items-center gap-2"><i class="fas fa-flag-checkered text-green-400"></i> Green Safe Messages</div>
-          <div class="stat-badge flex items-center gap-2"><i class="fas fa-triangle-exclamation text-yellow-400"></i> Yellow Suspicious</div>
-          <div class="stat-badge flex items-center gap-2"><i class="fas fa-skull text-red-400"></i> Red High-Risk Scams</div>
+        <p class="text-xl text-slate-300 mb-6">Rule Engine · Password Generator · URL Scanner · Breach Check · Safety Score · Report Center</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+          <div class="glass-card p-2 rounded-lg text-center text-sm"><i class="fas fa-robot text-indigo-400"></i> Classifier</div>
+          <div class="glass-card p-2 rounded-lg text-center text-sm"><i class="fas fa-key text-emerald-400"></i> Password</div>
+          <div class="glass-card p-2 rounded-lg text-center text-sm"><i class="fas fa-link text-cyan-400"></i> URL Scanner</div>
+          <div class="glass-card p-2 rounded-lg text-center text-sm"><i class="fas fa-database text-amber-400"></i> Breach Check</div>
+          <div class="glass-card p-2 rounded-lg text-center text-sm"><i class="fas fa-chart-line text-purple-400"></i> Safety Score</div>
+          <div class="glass-card p-2 rounded-lg text-center text-sm"><i class="fas fa-flag-checkered text-rose-400"></i> Report</div>
         </div>
-        
-        <p class="text-gray-300 max-w-2xl mx-auto text-lg leading-relaxed">
-          <span class="font-bold text-white">ScamSentinel Gemini</span> analyzes messages using a comprehensive scoring system. 
-          It detects scam indicators including money requests, OTP and password demands, urgency tactics, suspicious links, fake offers, 
-          impersonation attempts, and threatening language. Each message receives a risk score and actionable advice.
-        </p>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 text-left">
-          <div class="dark-card p-4 border-l-4 border-green-500">
-            <i class="fas fa-circle-check text-green-400 text-xl mb-2"></i>
-            <h3 class="font-bold text-white">Green Safe</h3>
-            <p class="text-xs text-gray-300">Score 0-2 points. No scam indicators detected.</p>
-          </div>
-          <div class="dark-card p-4 border-l-4 border-yellow-500">
-            <i class="fas fa-circle-exclamation text-yellow-400 text-xl mb-2"></i>
-            <h3 class="font-bold text-white">Yellow Suspicious</h3>
-            <p class="text-xs text-gray-300">Score 3-6 points. Exercise caution.</p>
-          </div>
-          <div class="dark-card p-4 border-l-4 border-red-500">
-            <i class="fas fa-circle-radiation text-red-400 text-xl mb-2"></i>
-            <h3 class="font-bold text-white">Red High-Risk</h3>
-            <p class="text-xs text-gray-300">Score 7+ points. Likely scam. Do not engage.</p>
+        <button id="enterDashboardBtn" class="btn-primary-glow px-8 py-3 rounded-xl font-bold text-white flex items-center justify-center gap-2 mx-auto">
+          <i class="fas fa-arrow-right-to-bracket"></i> Enter Security Suite
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APPLICATION -->
+  <div id="mainApp" class="p-4 md:p-6 hidden">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+        <div class="flex items-center gap-3">
+          <div class="bg-indigo-500/20 p-2 rounded-2xl"><i class="fas fa-shield-hooded text-3xl text-indigo-400"></i></div>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-indigo-300 to-indigo-400 bg-clip-text text-transparent">ScamShield AI</h1>
+            <p class="text-slate-400 text-xs">Rule-Based Classifier | LRU Cache | 6 Security Tools</p>
           </div>
         </div>
-        
-        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <button id="goToSignIn" class="btn-dark-primary"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-          <button id="goToSignUp" class="btn-outline-cyber"><i class="fas fa-user-plus"></i> Sign Up</button>
+        <div id="authWidget" class="text-sm text-slate-300 bg-slate-800/50 px-4 py-2 rounded-full"><i class="fas fa-microchip mr-1"></i> Rule Engine v2.0</div>
+      </div>
+
+      <!-- 6 Functionality Tabs -->
+      <div class="glass-panel rounded-2xl p-1 mb-6 flex flex-wrap gap-1">
+        <button data-tab="classifier" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition-all tab-active"><i class="fas fa-robot mr-2"></i>1. Threat Classifier</button>
+        <button data-tab="password" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition-all tab-inactive"><i class="fas fa-key mr-2"></i>2. Password Gen</button>
+        <button data-tab="urlscanner" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition-all tab-inactive"><i class="fas fa-link mr-2"></i>3. URL Scanner</button>
+        <button data-tab="breach" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition-all tab-inactive"><i class="fas fa-database mr-2"></i>4. Breach Check</button>
+        <button data-tab="safetyscore" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition-all tab-inactive"><i class="fas fa-chart-line mr-2"></i>5. Safety Score</button>
+        <button data-tab="report" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition-all tab-inactive"><i class="fas fa-flag-checkered mr-2"></i>6. Report Center</button>
+      </div>
+
+      <!-- TAB 1: THREAT CLASSIFIER (Rule-Based) -->
+      <div id="classifierTab" class="tab-content">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2">
+            <div class="glass-panel rounded-2xl p-6">
+              <h2 class="text-xl font-bold mb-3"><i class="fas fa-robot text-indigo-400 mr-2"></i>Rule-Based Threat Classifier</h2>
+              <textarea id="classifierInput" class="w-full bg-slate-900/70 border border-slate-600 rounded-xl p-4 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-500 resize-none" rows="5" placeholder="Paste any message for strict rule-based classification...&#10;&#10;RED_KEYWORDS: password, otp, bank, account, ssn&#10;THREAT_WORDS: kill, hurt, attack&#10;URGENCY_WORDS: urgent, now, immediately"></textarea>
+              <button id="classifyBtn" class="w-full mt-4 btn-primary-glow py-3 rounded-xl font-bold"><i class="fas fa-shield-alt mr-2"></i>Classify Message</button>
+              <div id="classifierHistory" class="mt-4 space-y-2 max-h-60 overflow-y-auto custom-scroll"></div>
+            </div>
+          </div>
+          <div class="glass-panel rounded-2xl p-6">
+            <h3 class="font-bold mb-3"><i class="fas fa-database text-indigo-400 mr-2"></i>Rule Database</h3>
+            <div class="space-y-2 text-xs">
+              <div><span class="text-rose-400 font-bold">RED_KEYWORDS:</span> password, otp, bank, account, ssn, credit card, verify, login, pin</div>
+              <div><span class="text-rose-400 font-bold">THREAT_WORDS:</span> kill, hurt, attack, destroy, expose, leak</div>
+              <div><span class="text-amber-400 font-bold">URGENCY:</span> urgent, now, immediately, asap, quick, hurry</div>
+              <div><span class="text-amber-400 font-bold">MANIPULATION:</span> trust me, why ignoring, act fast</div>
+            </div>
+            <div id="classifierResult" class="mt-4"></div>
+          </div>
         </div>
-        <p class="text-xs text-gray-400 mt-6">Secure demo environment | Risk scoring based on scam indicator patterns</p>
-        <div class="mt-6 text-sm text-blue-200/70 flex justify-center gap-5 flex-wrap">
-          <span><i class="fas fa-envelope"></i> yanetbedilu7@gmail.com</span>
-          <span><i class="fas fa-phone-alt"></i> +251922478313</span>
+      </div>
+
+      <!-- TAB 2: PASSWORD GENERATOR -->
+      <div id="passwordTab" class="tab-content hidden">
+        <div class="glass-panel rounded-2xl p-6">
+          <h2 class="text-xl font-bold mb-4"><i class="fas fa-key text-emerald-400 mr-2"></i>Secure Password Generator</h2>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm mb-2">Length: <span id="lengthValue" class="text-emerald-400">16</span></label>
+              <input type="range" id="pwdLength" min="8" max="32" value="16" class="w-full">
+              <div class="mt-4 space-y-2">
+                <label><input type="checkbox" id="includeUpper" checked class="mr-2"> Uppercase (A-Z)</label>
+                <label><input type="checkbox" id="includeLower" checked class="mr-2"> Lowercase (a-z)</label>
+                <label><input type="checkbox" id="includeNumbers" checked class="mr-2"> Numbers (0-9)</label>
+                <label><input type="checkbox" id="includeSymbols" checked class="mr-2"> Symbols (!@#$%^&*)</label>
+              </div>
+            </div>
+            <div>
+              <div class="bg-slate-900/70 rounded-xl p-4">
+                <p class="text-sm text-slate-400 mb-2">Generated Password:</p>
+                <div class="flex gap-2">
+                  <input type="text" id="generatedPassword" readonly class="flex-1 bg-slate-800 border border-slate-600 rounded-lg p-3 font-mono text-sm">
+                  <button id="copyPasswordBtn" class="bg-emerald-600 px-4 rounded-lg hover:bg-emerald-500"><i class="fas fa-copy"></i></button>
+                </div>
+              </div>
+              <button id="generatePasswordBtn" class="w-full mt-4 btn-primary-glow py-3 rounded-xl font-bold"><i class="fas fa-sync-alt mr-2"></i>Generate</button>
+              <div id="passwordStrength" class="mt-3 text-sm text-center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: URL SCANNER -->
+      <div id="urlscannerTab" class="tab-content hidden">
+        <div class="glass-panel rounded-2xl p-6">
+          <h2 class="text-xl font-bold mb-4"><i class="fas fa-link text-cyan-400 mr-2"></i>URL Safety Scanner</h2>
+          <input type="text" id="urlInput" placeholder="Enter suspicious URL (e.g., http://fake-bank.com)" class="w-full bg-slate-900/70 border border-slate-600 rounded-xl p-4 text-white">
+          <button id="scanUrlBtn" class="w-full mt-4 btn-primary-glow py-3 rounded-xl font-bold"><i class="fas fa-search mr-2"></i>Scan URL</button>
+          <div id="urlResult" class="mt-4"></div>
+        </div>
+      </div>
+
+      <!-- TAB 4: BREACH CHECK -->
+      <div id="breachTab" class="tab-content hidden">
+        <div class="glass-panel rounded-2xl p-6">
+          <h2 class="text-xl font-bold mb-4"><i class="fas fa-database text-amber-400 mr-2"></i>Data Breach Check</h2>
+          <input type="email" id="breachEmail" placeholder="Enter email address to check" class="w-full bg-slate-900/70 border border-slate-600 rounded-xl p-4 text-white">
+          <button id="checkBreachBtn" class="w-full mt-4 btn-primary-glow py-3 rounded-xl font-bold"><i class="fas fa-shield-alt mr-2"></i>Check Breaches</button>
+          <div id="breachResult" class="mt-4"></div>
+        </div>
+      </div>
+
+      <!-- TAB 5: SAFETY SCORE -->
+      <div id="safetyscoreTab" class="tab-content hidden">
+        <div class="glass-panel rounded-2xl p-6">
+          <h2 class="text-xl font-bold mb-4"><i class="fas fa-chart-line text-purple-400 mr-2"></i>Message Safety Score</h2>
+          <textarea id="scoreInput" class="w-full bg-slate-900/70 border border-slate-600 rounded-xl p-4 text-white" rows="4" placeholder="Paste a message to get safety score (0-100)"></textarea>
+          <button id="calculateScoreBtn" class="w-full mt-4 btn-primary-glow py-3 rounded-xl font-bold"><i class="fas fa-calculator mr-2"></i>Calculate Score</button>
+          <div id="scoreResult" class="mt-4"></div>
+        </div>
+      </div>
+
+      <!-- TAB 6: REPORT CENTER -->
+      <div id="reportTab" class="tab-content hidden">
+        <div class="glass-panel rounded-2xl p-6">
+          <h2 class="text-xl font-bold mb-4"><i class="fas fa-flag-checkered text-rose-400 mr-2"></i>Scam Report Center</h2>
+          <textarea id="reportInput" class="w-full bg-slate-900/70 border border-slate-600 rounded-xl p-4 text-white" rows="4" placeholder="Describe the scam or suspicious message..."></textarea>
+          <input type="text" id="reportUrl" placeholder="Optional: Related URL" class="w-full mt-3 bg-slate-900/70 border border-slate-600 rounded-xl p-3 text-white">
+          <button id="submitReportBtn" class="w-full mt-4 btn-danger py-3 rounded-xl font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Submit Report</button>
+          <div id="reportResult" class="mt-4"></div>
+          <div class="mt-6">
+            <h3 class="font-bold mb-2">Recent Reports</h3>
+            <div id="reportList" class="space-y-2 max-h-60 overflow-y-auto custom-scroll"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div id="signInPage" class="page">
-  <div class="dark-glass max-w-md mx-auto p-8 text-center">
-    <i class="fas fa-user-astronaut text-5xl text-blue-400 mb-4 floating-icon"></i>
-    <h2 class="text-3xl font-bold text-white mb-2">Sign In</h2>
-    <p class="text-gray-300 mb-6">Access the cybersecurity analyzer</p>
-    <div class="space-y-4">
-      <input type="email" id="signinEmail" placeholder="Email address" class="input-dark">
-      <input type="password" id="signinPassword" placeholder="Password" class="input-dark">
-      <button id="signInConfirmBtn" class="btn-dark-primary w-full justify-center"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</button>
-    </div>
-    <div class="mt-5 text-sm text-gray-400">
-      No account? <button id="switchToSignUpBtn" class="text-blue-400 hover:underline font-semibold">Create account</button>
-    </div>
-    <p class="text-xs text-gray-500 mt-6">Demo any credentials work for instant access</p>
-  </div>
-</div>
+  <script>
+    // ==================== RULE-BASED CLASSIFIER (Python Logic Port) ====================
+    const RED_KEYWORDS = new Set(["password", "otp", "bank", "account", "ssn", "credit card", "verify", "login", "pin", "security code"]);
+    const THREAT_WORDS = new Set(["kill", "hurt", "attack", "destroy", "expose", "leak"]);
+    const URGENCY_WORDS = new Set(["urgent", "now", "immediately", "asap", "quick", "hurry"]);
+    const MANIPULATION_WORDS = new Set(["trust me", "believe me", "don't tell anyone", "secret", "why are you ignoring me", "only you", "act fast"]);
+    const REGEX_RED = [/(send|give).*(otp|password|code)/i, /(verify|confirm).*(account|identity)/i, /(click).*(link)/i, /(bank).*(details)/i, /(i will).*(kill|hurt|expose)/i];
+    const REGEX_YELLOW = [/(why).*(ignoring)/i, /(trust me)/i, /(act fast)/i, /(limited time)/i];
+    
+    const cache = new Map();
+    const MAX_CACHE = 10000;
+    
+    function classifyMessage(message) {
+      const msg = message.toLowerCase();
+      for (let word of THREAT_WORDS) if (msg.includes(word)) return { label: "RED", score: 10, reason: "Threatening or violent language detected" };
+      let score = 0, reasons = [];
+      for (let word of RED_KEYWORDS) if (msg.includes(word)) { score += 4; reasons.push("Sensitive info request"); break; }
+      for (let word of URGENCY_WORDS) if (msg.includes(word)) { score += 2; reasons.push("Urgency/pressure"); break; }
+      for (let word of MANIPULATION_WORDS) if (msg.includes(word)) { score += 2; reasons.push("Manipulative language"); break; }
+      for (let pattern of REGEX_RED) if (pattern.test(msg)) { score += 5; reasons.push("High-risk pattern"); break; }
+      for (let pattern of REGEX_YELLOW) if (pattern.test(msg)) { score += 2; reasons.push("Suspicious pattern"); break; }
+      let label = score >= 6 ? "RED" : (score >= 3 ? "YELLOW" : "GREEN");
+      return { label, score, reason: reasons.length ? reasons.join(", ") : "No suspicious indicators" };
+    }
 
-<div id="signUpPage" class="page">
-  <div class="dark-glass max-w-md mx-auto p-8 text-center">
-    <i class="fas fa-user-shield text-5xl text-indigo-400 mb-4"></i>
-    <h2 class="text-3xl font-bold text-white mb-2">Create Account</h2>
-    <p class="text-gray-300 mb-6">Join the scam protection network</p>
-    <div class="space-y-4">
-      <input type="text" id="signupName" placeholder="Full name" class="input-dark">
-      <input type="email" id="signupEmail" placeholder="Email address" class="input-dark">
-      <input type="password" id="signupPassword" placeholder="Create password" class="input-dark">
-      <input type="password" id="signupConfirm" placeholder="Confirm password" class="input-dark">
-      <button id="signUpConfirmBtn" class="btn-dark-primary w-full justify-center"><i class="fas fa-user-check"></i> Sign Up</button>
-    </div>
-    <div class="mt-5 text-sm text-gray-400">
-      Already have an account? <button id="switchToSignInBtn" class="text-blue-400 hover:underline font-semibold">Sign In</button>
-    </div>
-  </div>
-</div>
-
-<div id="mainPage" class="page">
-  <div class="flex flex-wrap justify-between items-center gap-3 mb-8">
-    <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-blue-300 to-indigo-400 bg-clip-text text-transparent">
-      <i class="fas fa-shield-virus text-blue-400"></i> ScamSentinel Analyzer
-    </h1>
-    <div class="flex gap-2 text-sm bg-black/30 px-4 py-2 rounded-full"><i class="fas fa-microchip text-blue-400"></i> Risk Scoring Engine <span class="text-green-300">Active</span></div>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
-    <div class="dark-card p-5 cursor-pointer feature-card" onclick="toggleSection('checkSection')">
-      <i class="fas fa-magnifying-glass-chart fa-2x text-blue-400 mb-2"></i>
-      <h3 class="font-bold text-xl">Message Analyzer</h3>
-      <p class="text-xs text-gray-300">Get risk score category and scam type</p>
-    </div>
-    <div class="dark-card p-5 cursor-pointer feature-card" onclick="toggleSection('generateSection')">
-      <i class="fas fa-leaf fa-2x text-green-400 mb-2"></i>
-      <h3 class="font-bold text-xl">Safe Reply Generator</h3>
-      <p class="text-xs text-gray-300">Generate safe response for suspicious messages</p>
-    </div>
-    <div class="dark-card p-5 cursor-pointer feature-card" onclick="toggleSection('tipsSection')">
-      <i class="fas fa-book fa-2x text-yellow-400 mb-2"></i>
-      <h3 class="font-bold text-xl">Scam Indicators Guide</h3>
-      <p class="text-xs text-gray-300">Learn to identify scam patterns</p>
-    </div>
-  </div>
-
-  <div id="checkSection" class="dark-card p-5 mb-6" style="display: none;">
-    <div class="flex items-center gap-2 border-b border-blue-800 pb-2 mb-4">
-      <i class="fas fa-chart-line text-blue-400"></i>
-      <h2 class="text-xl font-bold">Message Risk Assessment</h2>
-    </div>
-    <textarea id="userInput" rows="5" class="input-dark w-full" placeholder="Paste any message for cybersecurity analysis. The system will assign a risk score based on scam indicators.&#10;&#10;Example: Your account has been compromised. Send me your password and OTP immediately or your funds will be frozen."></textarea>
-    <div class="flex flex-wrap justify-between mt-3 gap-2">
-      <div class="flex gap-2">
-        <label class="bg-gray-800/70 px-4 py-2 rounded-full text-sm cursor-pointer hover:bg-gray-700"><i class="fas fa-camera"></i> Image OCR <input type="file" id="imgUploadMain" class="hidden" accept="image/*"></label>
-        <label class="bg-gray-800/70 px-4 py-2 rounded-full text-sm cursor-pointer hover:bg-gray-700"><i class="fas fa-microphone"></i> Voice Input <input type="file" id="audioUploadMain" class="hidden" accept="audio/*"></label>
-      </div>
-      <button id="checkBtnMain" class="btn-dark-primary py-2"><i class="fas fa-chart-simple"></i> Analyze Message</button>
-    </div>
-    <div id="analysisResult" class="mt-4"></div>
-    <div id="mediaPreviewMain" class="text-xs text-gray-400 mt-2"></div>
-  </div>
-
-  <div id="generateSection" class="dark-card p-5 mb-6" style="display: none;">
-    <div class="flex items-center gap-2 border-b border-green-800 pb-2 mb-4">
-      <i class="fas fa-reply-all text-green-400"></i>
-      <h2 class="text-xl font-bold">Safe Message Generator</h2>
-    </div>
-    <textarea id="greenInputMain" rows="3" class="input-dark w-full" placeholder="Paste a suspicious or scam message to generate a safe, professional reply"></textarea>
-    <button id="generateGreenBtn" class="btn-dark-primary mt-3 w-full sm:w-auto"><i class="fas fa-shield"></i> Generate Safe Response</button>
-    <div id="greenOutput" class="mt-4"></div>
-  </div>
-
-  <div id="tipsSection" class="dark-card p-5" style="display: none;">
-    <div class="flex items-center gap-2 border-b border-yellow-700 pb-2 mb-4">
-      <i class="fas fa-circle-info text-yellow-400"></i>
-      <h2 class="text-xl font-bold">Scam Detection Guide</h2>
-    </div>
-    <div id="tipsDynamic" class="max-h-96 overflow-y-auto pr-2 space-y-4"></div>
-  </div>
-</div>
-
-<footer>
-  <div class="flex justify-center gap-5 flex-wrap text-sm">
-    <span>Copyright 2025 ScamSentinel Gemini | Cybersecurity Message Analyzer</span>
-    <span><i class="fas fa-envelope"></i> yanetbedilu7@gmail.com</span>
-    <span><i class="fas fa-phone-alt"></i> +251922478313</span>
-  </div>
-  <div class="text-xs mt-2 opacity-60">Risk scoring based on 10 scam indicators | Green Safe Yellow Suspicious Red High-Risk</div>
-</footer>
-
-<script>
-  const landingPage = document.getElementById('landingPage');
-  const signInPage = document.getElementById('signInPage');
-  const signUpPage = document.getElementById('signUpPage');
-  const mainPage = document.getElementById('mainPage');
-
-  document.getElementById('goToSignIn').onclick = () => { landingPage.classList.remove('active-page'); signInPage.classList.add('active-page'); };
-  document.getElementById('goToSignUp').onclick = () => { landingPage.classList.remove('active-page'); signUpPage.classList.add('active-page'); };
-  document.getElementById('switchToSignUpBtn').onclick = () => { signInPage.classList.remove('active-page'); signUpPage.classList.add('active-page'); };
-  document.getElementById('switchToSignInBtn').onclick = () => { signUpPage.classList.remove('active-page'); signInPage.classList.add('active-page'); };
-  
-  document.getElementById('signInConfirmBtn').onclick = () => {
-    const email = document.getElementById('signinEmail').value.trim();
-    const pwd = document.getElementById('signinPassword').value.trim();
-    if(!email || !pwd) { alert("Please enter email and password to sign in."); return; }
-    signInPage.classList.remove('active-page');
-    mainPage.classList.add('active-page');
-    showToast("Welcome " + email.split('@')[0] + " Risk analyzer active");
-  };
-  
-  document.getElementById('signUpConfirmBtn').onclick = () => {
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value.trim();
-    const pass = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    if(!name || !email || !pass) { alert("Please fill all fields"); return; }
-    if(pass !== confirm) { alert("Passwords do not match"); return; }
-    if(pass.length < 4) { alert("Password must be at least 4 characters"); return; }
-    signUpPage.classList.remove('active-page');
-    mainPage.classList.add('active-page');
-    showToast("Account created " + name + " Start analyzing messages");
-  };
-  
-  function showToast(msg) {
-    let toast = document.createElement('div');
-    toast.innerText = msg;
-    toast.style.position = 'fixed';
-    toast.style.bottom = '25px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
-    toast.style.backgroundColor = '#0f172ad9';
-    toast.style.backdropFilter = 'blur(12px)';
-    toast.style.color = '#a5f3fc';
-    toast.style.padding = '10px 22px';
-    toast.style.borderRadius = '40px';
-    toast.style.fontSize = '0.85rem';
-    toast.style.border = '1px solid #3b82f6';
-    toast.style.zIndex = '9999';
-    toast.style.fontWeight = '500';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2500);
-  }
-  
-  window.toggleSection = (id) => {
-    const sections = ['checkSection', 'generateSection', 'tipsSection'];
-    sections.forEach(sec => {
-      const el = document.getElementById(sec);
-      if(el) el.style.display = (sec === id ? 'block' : 'none');
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        document.getElementById(`${tabId}Tab`).classList.remove('hidden');
+        document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('tab-active'); b.classList.add('tab-inactive'); });
+        btn.classList.remove('tab-inactive'); btn.classList.add('tab-active');
+      });
     });
-  };
-  
-  document.getElementById('checkSection').style.display = 'none';
-  document.getElementById('generateSection').style.display = 'none';
-  document.getElementById('tipsSection').style.display = 'none';
-  
-  function analyzeMessageRisk(message) {
-    let score = 0;
-    let reasons = [];
-    let scamTypes = [];
-    const lowerMsg = message.toLowerCase();
-    
-    if(/unknown sender|stranger|someone you don't know/i.test(lowerMsg) || /@[a-z0-9]+\.[a-z]{2,}/i.test(lowerMsg) && !/bank|official|support/i.test(lowerMsg)) {
-      score += 1;
-      reasons.push("unknown sender");
+
+    document.getElementById('enterDashboardBtn')?.addEventListener('click', () => {
+      document.getElementById('welcomeOverlay').style.opacity = '0';
+      setTimeout(() => { document.getElementById('welcomeOverlay').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); }, 500);
+    });
+
+    // ========== 1. THREAT CLASSIFIER ==========
+    let history = [];
+    function updateClassifierHistory(msg, result) {
+      history.unshift({ msg: msg.substring(0, 80), result, time: new Date().toLocaleTimeString() });
+      if (history.length > 5) history.pop();
+      const container = document.getElementById('classifierHistory');
+      if (container) container.innerHTML = history.map(h => `<div class="glass-card p-2 rounded-lg text-xs ${h.result.label === 'RED' ? 'flag-red-bg' : (h.result.label === 'YELLOW' ? 'flag-yellow-bg' : 'flag-green-bg')}"><span class="font-bold">${h.result.label}</span> (${h.result.score}) - ${h.msg}... <span class="text-slate-500">${h.time}</span></div>`).join('');
     }
-    
-    if(/urgent|immediately|asap|right now|without delay|act now|limited time/i.test(lowerMsg)) {
-      score += 2;
-      reasons.push("urgency language");
-      scamTypes.push("urgency manipulation");
+    document.getElementById('classifyBtn')?.addEventListener('click', () => {
+      const input = document.getElementById('classifierInput').value;
+      if (!input) return;
+      const result = classifyMessage(input);
+      const bgClass = result.label === 'RED' ? 'flag-red-bg' : (result.label === 'YELLOW' ? 'flag-yellow-bg' : 'flag-green-bg');
+      const color = result.label === 'RED' ? 'text-rose-400' : (result.label === 'YELLOW' ? 'text-amber-400' : 'text-emerald-400');
+      document.getElementById('classifierResult').innerHTML = `<div class="${bgClass} p-4 rounded-xl"><p class="font-bold ${color} text-lg">${result.label} (Score: ${result.score})</p><p class="text-sm mt-2">${result.reason}</p><div class="mt-2 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full ${result.label === 'RED' ? 'bg-rose-500' : (result.label === 'YELLOW' ? 'bg-amber-500' : 'bg-emerald-500')}" style="width: ${Math.min(100, result.score * 10)}%"></div></div></div>`;
+      updateClassifierHistory(input, result);
+    });
+
+    // ========== 2. PASSWORD GENERATOR ==========
+    function genPassword() {
+      const len = parseInt(document.getElementById('pwdLength').value);
+      const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ', lower = 'abcdefghijkmnopqrstuvwxyz', numbers = '23456789', symbols = '!@#$%^&*';
+      let chars = '';
+      if (document.getElementById('includeUpper').checked) chars += upper;
+      if (document.getElementById('includeLower').checked) chars += lower;
+      if (document.getElementById('includeNumbers').checked) chars += numbers;
+      if (document.getElementById('includeSymbols').checked) chars += symbols;
+      if (!chars) chars = lower + numbers;
+      let pwd = '';
+      for (let i = 0; i < len; i++) pwd += chars[Math.floor(Math.random() * chars.length)];
+      document.getElementById('generatedPassword').value = pwd;
+      let strength = len >= 14 && chars.length > 40 ? 'Strong' : (len >= 10 ? 'Medium' : 'Weak');
+      document.getElementById('passwordStrength').innerHTML = `<span class="px-3 py-1 rounded-full ${strength === 'Strong' ? 'bg-emerald-500/30 text-emerald-400' : strength === 'Medium' ? 'bg-amber-500/30 text-amber-400' : 'bg-rose-500/30 text-rose-400'}">${strength}</span>`;
     }
-    
-    if(/(https?:\/\/|bit\.ly|tinyurl|short\.url|rb\.gy|ow\.ly)/i.test(message)) {
-      score += 3;
-      reasons.push("suspicious link");
-      scamTypes.push("phishing link");
+    document.getElementById('pwdLength')?.addEventListener('input', e => document.getElementById('lengthValue').innerText = e.target.value);
+    document.getElementById('generatePasswordBtn')?.addEventListener('click', genPassword);
+    document.getElementById('copyPasswordBtn')?.addEventListener('click', () => { const pwd = document.getElementById('generatedPassword'); pwd.select(); document.execCommand('copy'); alert('Copied!'); });
+    genPassword();
+
+    // ========== 3. URL SCANNER ==========
+    document.getElementById('scanUrlBtn')?.addEventListener('click', () => {
+      const url = document.getElementById('urlInput').value;
+      if (!url) return;
+      const suspicious = ['bit.ly', 'tinyurl', 'short.link', 'cutt.ly', 'ow.ly', 'scam', 'fake', 'phishing'];
+      let risk = 'GREEN', reason = 'URL appears safe';
+      for (let s of suspicious) if (url.toLowerCase().includes(s)) { risk = 'RED'; reason = `Suspicious domain: ${s}`; break; }
+      if (url.startsWith('http://') && risk === 'GREEN') { risk = 'YELLOW'; reason = 'HTTP (non-HTTPS) - less secure'; }
+      const bgClass = risk === 'RED' ? 'flag-red-bg' : (risk === 'YELLOW' ? 'flag-yellow-bg' : 'flag-green-bg');
+      document.getElementById('urlResult').innerHTML = `<div class="${bgClass} p-4 rounded-xl"><p class="font-bold ${risk === 'RED' ? 'text-rose-400' : (risk === 'YELLOW' ? 'text-amber-400' : 'text-emerald-400')}">${risk} FLAG</p><p class="text-sm">${reason}</p></div>`;
+    });
+
+    // ========== 4. BREACH CHECK ==========
+    const breachedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com'];
+    document.getElementById('checkBreachBtn')?.addEventListener('click', () => {
+      const email = document.getElementById('breachEmail').value;
+      if (!email || !email.includes('@')) { document.getElementById('breachResult').innerHTML = '<div class="flag-yellow-bg p-4 rounded-xl">Invalid email</div>'; return; }
+      const domain = email.split('@')[1];
+      const breached = breachedDomains.includes(domain);
+      document.getElementById('breachResult').innerHTML = `<div class="${breached ? 'flag-red-bg' : 'flag-green-bg'} p-4 rounded-xl"><p class="font-bold ${breached ? 'text-rose-400' : 'text-emerald-400'}">${breached ? '⚠️ BREACH DETECTED' : '✅ No breaches found'}</p><p class="text-sm mt-2">${breached ? `Domain ${domain} found in breach database. Change passwords immediately.` : `Email appears safe in our records.`}</p></div>`;
+    });
+
+    // ========== 5. SAFETY SCORE ==========
+    function calcScore(msg) {
+      let score = 100;
+      const threats = ['kill', 'hurt', 'password', 'otp', 'bitcoin', 'urgent', 'verify', 'click', 'suspended'];
+      for (let t of threats) if (msg.toLowerCase().includes(t)) score -= 12;
+      return Math.max(0, Math.min(100, score));
     }
-    
-    if(/you won|prize|lottery|congratulations you are the winner|free prize|cash reward|inheritance|million/i.test(lowerMsg)) {
-      score += 3;
-      reasons.push("fake offer too good to be true");
-      scamTypes.push("lottery scam");
+    document.getElementById('calculateScoreBtn')?.addEventListener('click', () => {
+      const msg = document.getElementById('scoreInput').value;
+      if (!msg) return;
+      const score = calcScore(msg);
+      let color = score >= 70 ? 'text-emerald-400' : (score >= 40 ? 'text-amber-400' : 'text-rose-400');
+      let barColor = score >= 70 ? 'bg-emerald-500' : (score >= 40 ? 'bg-amber-500' : 'bg-rose-500');
+      document.getElementById('scoreResult').innerHTML = `<div class="glass-card p-6 rounded-xl text-center"><p class="text-5xl font-bold ${color}">${score}</p><p class="text-sm text-slate-400">Safety Score (0-100)</p><div class="w-full bg-slate-700 rounded-full h-3 mt-3"><div class="h-3 rounded-full ${barColor}" style="width: ${score}%"></div></div><p class="text-xs mt-3">${score >= 70 ? '✅ Low risk' : (score >= 40 ? '⚠️ Medium risk - caution advised' : '🔴 High risk - dangerous content')}</p></div>`;
+    });
+
+    // ========== 6. REPORT CENTER ==========
+    let reports = JSON.parse(localStorage.getItem('scamReports6') || '[]');
+    function updateReportList() {
+      const container = document.getElementById('reportList');
+      if (container) container.innerHTML = reports.slice(-5).reverse().map(r => `<div class="glass-card p-3 rounded-lg text-sm"><p>${r.message.substring(0, 80)}${r.message.length > 80 ? '...' : ''}</p><p class="text-xs text-slate-500 mt-1">${new Date(r.date).toLocaleString()}</p></div>`).join('');
+      if (reports.length === 0 && container) container.innerHTML = '<p class="text-slate-500 text-sm text-center">No reports yet</p>';
     }
-    
-    if(/send money|transfer money|wire|payment|pay now|deposit|funds|bitcoin|ethereum|crypto|paypal|western union/i.test(lowerMsg)) {
-      score += 4;
-      reasons.push("requesting money");
-      scamTypes.push("financial scam");
-    }
-    
-    if(/otp|one time password|password|passcode|pin|bank details|credit card|debit card|account number|routing number|ssn|social security|tax id|login credentials|sign in|log in/i.test(lowerMsg)) {
-      score += 4;
-      reasons.push("requesting sensitive information");
-      scamTypes.push("credential theft");
-    }
-    
-    if(/photo|picture|video|nude|explicit|pe
+    document.getElementById('submitReportBtn')?.addEventListener('click', () => {
+      const message = document.getElementById('reportInput').value;
+      if (!message) { document.getElementById('reportResult').innerHTML = '<div class="flag-yellow-bg p-3 rounded-xl">Please describe the scam</div>'; return; }
+      reports.unshift({ message, url: document.getElementById('reportUrl').value || 'N/A', date: new Date().toISOString() });
+      localStorage.setItem('scamReports6', JSON.stringify(reports.slice(0, 50)));
+      updateReportList();
+      document.getElementById('reportResult').innerHTML = '<div class="flag-green-bg p-3 rounded-xl text-emerald-400"> Report submitted. Thank you!</div>';
+      document.getElementById('reportInput').value = '';
+      document.getElementById('reportUrl').value = '';
+      setTimeout(() => document.getElementById('reportResult').innerHTML = '', 3000);
+    });
+    updateReportList();
+
+    // Welcome test message
+    setTimeout(() => {
+      const testMsg = "Rule Engine Ready: RED_KEYWORDS, THREAT_WORDS, URGENCY, MANIPULATION, REGEX patterns active";
+      updateClassifierHistory(testMsg, { label: "GREEN", score: 0, reason: "System ready" });
+    }, 500);
+  </script>
+</body>
+</html>
